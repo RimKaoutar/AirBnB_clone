@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
         elif arglist[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            print(eval(arglist[0]().id))
+            print(eval(arglist[0])().id)
             storage.save()
 
 if __name__ == '__main__':
