@@ -2,7 +2,7 @@
 """contains the entry point of the command interpreter"""
 
 import cmd
-import models.engine.file_storage
+import models.engine
 
 class HBNBCommand(cmd.Cmd):
     """class HBNBCommand(cmd.Cmd)"""
@@ -40,6 +40,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             print(eval(arglist[0]().id))
+            storage.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
