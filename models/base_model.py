@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """the main entry to the BaseModel for the ABnB console"""
+import uuid
+import datetime
 
 
-import uuid, datetime
 class BaseModel:
     """the BaseModel class"""
     def __init__(self):
@@ -13,7 +14,8 @@ class BaseModel:
 
     def __str__(self):
         """printable formatted stirng of the objj"""
-        return (str("[{}] ({}) <{}>".format(self.__class__.__name__, self.id, self.__dict__)))
+        return (str("[{}] ({}) <{}>".format(self.__class__.__name__,
+                                            self.id, self.__dict__)))
 
     def save(self):
         """update the updated_at attr"""
@@ -27,6 +29,3 @@ class BaseModel:
         dictionnary["crated_at"] = dictionnary["created_at"].isoformat()
         dictionnary["updated_at"] = dictionnary["updated_at"].isoformat()
         return (dictionnary)
-        
-
-
