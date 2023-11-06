@@ -2,7 +2,8 @@
 """contains the entry point of the command interpreter"""
 
 import cmd
-import models.engine
+from models.base_model import BaseModel
+from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """class HBNBCommand(cmd.Cmd)"""

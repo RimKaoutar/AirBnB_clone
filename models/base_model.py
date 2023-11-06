@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """the main entry to the BaseModel for the ABnB console"""
 import uuid
-import datetime
+from datetime import datetime
 from models import storage
 
 
