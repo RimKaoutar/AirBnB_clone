@@ -42,6 +42,6 @@ class BaseModel:
         as well as the base __dict__ containings"""
         dictionnary = self.__dict__.copy()
         dictionnary["__class__"] = self.__class__.__name__
-        dictionnary["crated_at"] = dictionnary["created_at"].isoformat()
+        dictionnary["created_at"] = dictionnary["created_at"].isoformat()
         dictionnary["updated_at"] = dictionnary["updated_at"].isoformat()
         return (dictionnary)
