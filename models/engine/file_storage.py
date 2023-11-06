@@ -30,5 +30,18 @@ class FileStorage:
         """Deserializes the JSON file to __objects"""
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r", encoding = "utf-8") as f:
-                obj = json.load(f)
-                self.new(obj)
+                objs = json.load(f)
+                for key, value in objs.items():
+                    cls_name = key.split('.')[0]
+                    if cls_name in self.classes():
+                        instance = self.classes()[cls_name](**value)
+                        self.new(instance)
+
+    def classes(self):
+        """Returns a dictionary of valid classes and their references."""
+        from models.base_model import BaseModel
+
+        classes = {
+            "BaseModel": BaseModel,
+        }
+        return classes

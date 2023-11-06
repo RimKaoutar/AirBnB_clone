@@ -25,7 +25,7 @@ class HBNBCommand(cmd.Cmd):
     do_EOF = do_quit
 
     def emptyline(self):
-        """Empty line shouldn't execute anything"""
+        """Empty line + enter should not execute anything"""
         pass
     
     def do_create(self, args):
@@ -42,6 +42,41 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(eval(arglist[0])().id)
             storage.save()
+
+    def do_show(self, arg):
+        """Prints the string representation of an instance."""
+        if arg is None or arg == "":
+            print("** class name missing **")
+        else:
+            args = arg.split(" ")
+            if args[0] not in storage.classes():
+                print("** class doesn't exist **")
+            elif len(args) < 2:
+                print("** instance id missing **")
+            else:
+                key = f"{args[0]}.{args[1]}"
+                if key not in storage.all():
+                    print("** no instance found **")
+                else:
+                    print(storage.all()[key])
+
+    def do_destroy(self, arg):
+        """Deletes an instance based on the class name and id"""
+        if arg is None or arg == "":
+            print("** class name missing **")
+        else:
+            args = arg.split(" ")
+            if args[0] not in storage.classes():
+                print("** class doesn't exist **")
+            elif len(args) < 2:
+                print("** instance id missing **")
+            else:
+                key = f"{args[0]}.{args[1]}"
+                if key not in storage.all():
+                    print("** no instance found **")
+                else:
+                    del storage.all()[key]
+                    storage.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
