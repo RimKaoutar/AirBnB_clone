@@ -2,6 +2,7 @@
 """the main entry to the BaseModel for the ABnB console"""
 import uuid
 import datetime
+from models import storage
 
 
 class BaseModel:
@@ -31,6 +32,7 @@ class BaseModel:
     def save(self):
         """update the updated_at attr"""
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """return a dictionnary of the current class attributes
