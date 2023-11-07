@@ -10,7 +10,7 @@ from models.state import State
 from models.place import Place
 from models.review import Review
 from models import storage
-
+from re import search
 
 class HBNBCommand(cmd.Cmd):
     """class HBNBCommand(cmd.Cmd)"""
@@ -125,6 +125,30 @@ class HBNBCommand(cmd.Cmd):
         if args[2] not in ["id", "created_at", "updated_at"]:
             setattr(models.storage.all()[key], args[2], type(getattr(models.storage.all()[key], args[2]))(args[3]))
             models.storage.all()[key].save()
+
+
+    def default(self, arg):
+        """Default behavior for cmd module when 
+        we enter <class_name>.<method> or invalid input"""
+        
+        """ <!> must update the methods when adding do_count() """
+        methods = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "update": self.do_update
+        }
+        result = search(r"\.", arg)
+        if result is not None:
+            args = [arg[:result.span()[0]], arg[result.span()[1]:]]
+            result = search(r"\((.*?)\)", args[1])
+            if result is not None:
+                cmd = [args[1][:result.span()[0]], result.group()[1:-1]]
+                if cmd[0] in methods.keys():
+                    call = f"{args[0]} {cmd[1]}"
+                    return methods[cmd[0]](call)
+        print(f"*** Unknown syntax: {arg}")
+        return False
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
