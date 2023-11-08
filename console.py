@@ -185,25 +185,18 @@ class HBNBCommand(cmd.Cmd):
         return False
 
 def parse_string(s):
-    # Extract dictionary strings
     dict_strings = re.findall(r'\{.*?\}', s)
-    
-    # Replace dictionary strings with placeholders
     for i, dict_string in enumerate(dict_strings):
         s = s.replace(dict_string, f'{{placeholder{i}}}')
-    
-    # Split the string and strip unwanted characters
     elements = re.split(r'[ ,:\t\'\"]+', s)
     elements = [e.strip() for e in elements if e]
     
-    # Replace placeholders with actual dictionaries
     for i, element in enumerate(elements):
         if 'placeholder' in element:
             dict_index = int(element.strip('{}placeholder'))
-            # Replace single quotes with double quotes before parsing
             dict_string = dict_strings[dict_index].replace("'", '"')
             elements[i] = json.loads(dict_string)
-    
     return elements
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
