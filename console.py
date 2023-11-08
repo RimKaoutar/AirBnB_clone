@@ -102,7 +102,7 @@ class HBNBCommand(cmd.Cmd):
     
     def do_update(self, args):
         """Updates an instance based on the class name and id by adding or updating attribute"""
-        args = args.split()
+        args = [i.strip(",") for i in args.split()]
         if len(args) == 0:
             print("** class name missing **")
             return
