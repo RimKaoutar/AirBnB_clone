@@ -106,14 +106,14 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return
-        if args[0] not in models.classes:
+        if args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
             print("** instance id missing **")
             return
         key = args[0] + "." + args[1]
-        if key not in models.storage.all():
+        if key not in storage.all():
             print("** no instance found **")
             return
         if len(args) < 3:
@@ -123,8 +123,8 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
         if args[2] not in ["id", "created_at", "updated_at"]:
-            setattr(models.storage.all()[key], args[2], type(getattr(models.storage.all()[key], args[2]))(args[3]))
-            models.storage.all()[key].save()
+            setattr(storage.all()[key], args[2], type(getattr(storage.all()[key], args[2]))(args[3]).strip("\""))
+            storage.all()[key].save()
 
     def do_count(self, arg):
         """count the number of instances of an object
