@@ -164,7 +164,6 @@ class HBNBCommand(cmd.Cmd):
         """Default behavior for cmd module when 
         we enter <class_name>.<method> or invalid input"""
         
-        """ <!> must update the methods when adding do_count() """
         methods = {
             "all": self.do_all,
             "show": self.do_show,
