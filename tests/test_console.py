@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 """
 Unit tests for console.py
+
+Unittest classes:
+    TestHBNBCommandQuit
+    TestHBNBCommandEmptyLine
 """
 import unittest
 import os
@@ -20,7 +24,12 @@ class TestHBNBCommandQuit(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertTrue(HBNBCommand().onecmd("EOF"))
 
-
+class TestHBNBCommandEmptyLine(unittest.TestCase):
+    """Unittests for testing empty line in the HBNB command interpreter."""
+    def test_emptyline_does_nothing(self) -> None:
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd(""))
+            self.assertEqual("", output.getvalue().strip())
 
 
         
