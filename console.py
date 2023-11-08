@@ -126,6 +126,17 @@ class HBNBCommand(cmd.Cmd):
             setattr(models.storage.all()[key], args[2], type(getattr(models.storage.all()[key], args[2]))(args[3]))
             models.storage.all()[key].save()
 
+    def do_count(self, arg):
+        """count the number of instances of an object
+        Args:
+            arg (obj): the supposedly class to look for
+        """
+        args = [i.strip(".") for i in arg.split()]
+        count = 0
+        for obj in storage.all().values():
+            if args[0] == obj.__class__.__name__:
+                count += 1
+        print(count)
 
     def default(self, arg):
         """Default behavior for cmd module when 
@@ -136,7 +147,8 @@ class HBNBCommand(cmd.Cmd):
             "all": self.do_all,
             "show": self.do_show,
             "destroy": self.do_destroy,
-            "update": self.do_update
+            "update": self.do_update,
+            "count": self.do_count
         }
         result = search(r"\.", arg)
         if result is not None:
