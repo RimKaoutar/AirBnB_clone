@@ -11,6 +11,8 @@ from models.place import Place
 from models.review import Review
 from models import storage
 from re import search
+import json
+import re
 
 class HBNBCommand(cmd.Cmd):
     """class HBNBCommand(cmd.Cmd)"""
@@ -101,31 +103,51 @@ class HBNBCommand(cmd.Cmd):
         print([str(all_instance) for all_instance in all_instances])
     
     def do_update(self, args):
-        """Updates an instance based on the class name and id by adding or updating attribute"""
-        args = [i.strip(",") for i in args.split()]
+        """ Usage : update <class> <id> <attribute> <value>
+            Usage : <class>.update(<id>, <attribute>, <value>)
+            Usage : <class>.update(<id>, <{"attribute": "value", ...}>)
+            Args:
+                args (string): a string containing the args parsed
+                from the command line
+        """
+        args = parse_string(args)
         if len(args) == 0:
             print("** class name missing **")
             return
         if args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
             return
-        if len(args) < 2:
+        if len(args) == 1:
             print("** instance id missing **")
             return
-        key = args[0] + "." + args[1]
-        if key not in storage.all():
+        if "{}.{}".format(args[0], args[1])not in storage.all().keys():
             print("** no instance found **")
             return
-        if len(args) < 3:
+        if len(args) == 2:
             print("** attribute name missing **")
             return
-        if len(args) < 4:
-            print("** value missing **")
-            return
-        if args[2] not in ["id", "created_at", "updated_at"]:
-            setattr(storage.all()[key], args[2], type(getattr(storage.all()[key], args[2]))(args[3]).strip("\""))
-            storage.all()[key].save()
-
+        if len(args) == 3:    
+            if type(args[2]) != dict :
+                print("** value missing **")
+                return
+        if len(args) == 4:
+            obj = storage.all()["{}.{}".format(args[0], args[1])]
+            if args[2] in obj.__class__.__dict__.keys():
+                valtype = type(obj.__class__.__dict__[args[2]])
+                obj.__dict__[args[2]] = valtype(args[3])
+            else:
+                obj.__dict__[args[2]] = args[3]
+        elif type(args[2]) == dict:
+            obj = storage.all()["{}.{}".format(args[0], args[1])]
+            for k, v in args[2].items():
+                if (k in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[k]) in {str, int, float}):
+                    valtype = type(obj.__class__.__dict__[k])
+                    obj.__dict__[k] = valtype(v)
+                else:
+                    obj.__dict__[k] = v
+        storage.save()
+        
     def do_count(self, arg):
         """count the number of instances of an object
         Args:
@@ -162,5 +184,26 @@ class HBNBCommand(cmd.Cmd):
         print(f"*** Unknown syntax: {arg}")
         return False
 
+def parse_string(s):
+    # Extract dictionary strings
+    dict_strings = re.findall(r'\{.*?\}', s)
+    
+    # Replace dictionary strings with placeholders
+    for i, dict_string in enumerate(dict_strings):
+        s = s.replace(dict_string, f'{{placeholder{i}}}')
+    
+    # Split the string and strip unwanted characters
+    elements = re.split(r'[ ,:\t\'\"]+', s)
+    elements = [e.strip() for e in elements if e]
+    
+    # Replace placeholders with actual dictionaries
+    for i, element in enumerate(elements):
+        if 'placeholder' in element:
+            dict_index = int(element.strip('{}placeholder'))
+            # Replace single quotes with double quotes before parsing
+            dict_string = dict_strings[dict_index].replace("'", '"')
+            elements[i] = json.loads(dict_string)
+    
+    return elements
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
