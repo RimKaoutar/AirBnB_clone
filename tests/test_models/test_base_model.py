@@ -130,5 +130,56 @@ class TestBaseModelSave(unittest.TestCase):
         bmid = f"BaseModel.{base.id}"
         with open("file.json", mode="r", encoding="utf-8") as file:
             self.assertIn(bmid, file.read())
+
+class TestBaseModelToDict(unittest.TestCase):
+    """Unittests for testing to_dict method of the BaseModel class."""
+
+    def test_to_dict_type(self) -> None:
+        base = BaseModel()
+        self.assertTrue(dict, type(base.to_dict()))
+
+    def test_to_dict_contains_correct_keys(self) -> None:
+        base = BaseModel()
+        self.assertIn("id", base.to_dict())
+        self.assertIn("created_at", base.to_dict())
+        self.assertIn("updated_at", base.to_dict())
+        self.assertIn("__class__", base.to_dict())
+
+    def test_to_dict_contains_added_attributes(self) -> None:
+        base = BaseModel()
+        base.name = "Holberton"
+        base.my_number = 98
+        self.assertIn("name", base.to_dict())
+        self.assertIn("my_number", base.to_dict())
+
+    def test_to_dict_datetime_attributes_are_strs(self) -> None:
+        base = BaseModel()
+        bm_dict = base.to_dict()
+        self.assertEqual(str, type(bm_dict["created_at"]))
+        self.assertEqual(str, type(bm_dict["updated_at"]))
+
+    def test_to_dict_output(self) -> None:
+        dt_obj = datetime.now()
+        base = BaseModel()
+        base.id = "123456"
+        base.created_at = base.updated_at = dt_obj
+        tdict = {
+            "id": "123456",
+            "__class__": "BaseModel",
+            "created_at": dt_obj.isoformat(),
+            "updated_at": dt_obj.isoformat(),
+        }
+        self.assertDictEqual(base.to_dict(), tdict)
+
+    def test_contrast_to_dict_dunder_dict(self) -> None:
+        base = BaseModel()
+        self.assertNotEqual(base.to_dict(), base.__dict__)
+
+    def test_to_dict_with_arg(self) -> None:
+        base = BaseModel()
+        with self.assertRaises(TypeError):
+            base.to_dict(None)
+
+
 if __name__ == "__main__":
     unittest.main()
