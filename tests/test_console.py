@@ -428,5 +428,27 @@ class TestHBNBCommandUpdate(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.update()"))
                 self.assertEqual(correct, output.getvalue().strip())
+
+    def test_update_invalid_id_space_notation(self) -> None:
+        correct = "** no instance found **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"update {cls} 1"))
+                self.assertEqual(correct, output.getvalue().strip())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     unittest.main()
