@@ -9,6 +9,7 @@ Unittest classes:
     TestHBNBCommandPrompt
     TestHBNBCommandDestroy
     TestHBNBCommandAll
+    TestHBNBCommandUpdate
 """
 import unittest
 import os
@@ -376,6 +377,41 @@ class TestHBNBCommandAll(unittest.TestCase):
             self.assertFalse(HBNBCommand().onecmd("Review.all()"))
             self.assertIn("Review", output.getvalue().strip())
             self.assertNotIn("BaseModel", output.getvalue().strip())
+
+class TestHBNBCommandUpdate(unittest.TestCase):
+    """Unittests for testing update from the HBNB command interpreter."""
+
+    classes = ["BaseModel", "User", "State", "City", 
+               "Amenity", "Place", "Review"]
+    @classmethod
+    def setUp(self) -> None:
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage.__objects = {}
+
+    @classmethod
+    def tearDown(self) -> None:
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("tmp", "file.json")
+        except IOError:
+            pass
+
+    def test_update_missing_class(self) -> None:
+        correct = "** class name missing **"
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd("update"))
+            self.assertEqual(correct, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd(".update()"))
+            self.assertEqual(correct, output.getvalue().strip())
+
+
 
 if __name__ == "__main__":
     unittest.main()
