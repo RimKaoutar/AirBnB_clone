@@ -87,8 +87,37 @@ class TestHBNBCommandPrompt(unittest.TestCase):
     def test_prompt_string(self) -> None:
         self.assertEqual("(hbnb) ", HBNBCommand.prompt)
 
-                
+class TestHBNBCommandShow(unittest.TestCase):
+    """Unittests for testing show in the HBNB command interpreter"""
 
-        
+    @classmethod
+    def setUp(self) -> None:
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage.__objects = {}
+
+    @classmethod
+    def tearDown(self) -> None:
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("tmp", "file.json")
+        except IOError:
+            pass
+
+    def test_show_missing_class(self) -> None:
+        expected = "** class name missing **"
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd("show"))
+            self.assertEqual(expected, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd(".show()"))
+            self.assertEqual(expected, output.getvalue().strip())
+
+
 if __name__ == "__main__":
     unittest.main()
