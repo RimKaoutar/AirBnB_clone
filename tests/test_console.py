@@ -217,7 +217,12 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd(f"destroy {cls}"))
                 self.assertEqual(correct, output.getvalue().strip())
-        
+
+    def test_destroy_id_missing_dot_notation(self) -> None:
+        correct = "** instance id missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"{cls}.destroy()"))
 
 
 
