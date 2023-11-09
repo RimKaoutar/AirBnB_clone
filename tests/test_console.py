@@ -249,6 +249,21 @@ class TestHBNBCommandDestroy(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(command))
                 self.assertNotIn(obj, storage.all())
 
+    def test_destroy_objects_dot_notation(self) -> None:
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+                test_id = output.getvalue().strip()
+            with patch("sys.stdout", new=StringIO()) as output:
+                obj = storage.all()["{}.{}".format(cls,test_id)]
+                command = "{}.destroy({})".format(cls,test_id)
+                self.assertFalse(HBNBCommand().onecmd(command))
+                self.assertNotIn(obj, storage.all())
+        
+
+
+        
+
 
 
 if __name__ == "__main__":
