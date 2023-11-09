@@ -157,5 +157,18 @@ class TestHBNBCommandShow(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.show(1)"))
                 self.assertEqual(correct, output.getvalue().strip())
+
+    def test_show_objects_space_notation(self) -> None:
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+                test_id = output.getvalue().strip()
+            with patch("sys.stdout", new=StringIO()) as output:
+                obj = storage.all()[f"{cls}.{test_id}"]
+                command = f"show {cls} {test_id}"
+                self.assertFalse(HBNBCommand().onecmd(command))
+                self.assertEqual(obj.__str__(), output.getvalue().strip())
+        
+
 if __name__ == "__main__":
     unittest.main()
