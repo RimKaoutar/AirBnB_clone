@@ -90,6 +90,9 @@ class TestHBNBCommandPrompt(unittest.TestCase):
 class TestHBNBCommandShow(unittest.TestCase):
     """Unittests for testing show in the HBNB command interpreter"""
 
+    classes = ["BaseModel", "User", "State", "City", 
+               "Amenity", "Place", "Review"]
+
     @classmethod
     def setUp(self) -> None:
         try:
@@ -127,6 +130,14 @@ class TestHBNBCommandShow(unittest.TestCase):
             self.assertFalse(HBNBCommand().onecmd("MyModel.show()"))
             self.assertEqual(correct, output.getvalue().strip())
 
+    def test_show_missing_id_space_notation(self) -> None:
+        correct = "** instance id missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"show {cls}"))
+                self.assertEqual(correct, output.getvalue().strip())
+
+    
 
 if __name__ == "__main__":
     unittest.main()
