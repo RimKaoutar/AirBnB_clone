@@ -87,5 +87,48 @@ class TestBaseModelInstantiate(unittest.TestCase):
         self.assertEqual(base.created_at, dt_obj)
         self.assertEqual(base.updated_at, dt_obj)
 
+
+class TestBaseModelSave(unittest.TestCase):
+    """Unittests for testing save method of the BaseModel class."""
+
+    def setUp(self) -> None:
+        with contextlib.suppress(IOError):
+            os.rename("file.json", "tmp")
+
+    def tearDown(self) -> None:
+        with contextlib.suppress(IOError):
+            os.remove("file.json")
+        with contextlib.suppress(IOError):
+            os.rename("tmp", "file.json")
+
+    def test_one_save(self) -> None:
+        base = BaseModel()
+        sleep(0.05)
+        first_updated_at = base.updated_at
+        base.save()
+        self.assertLess(first_updated_at, base.updated_at)
+
+    def test_two_saves(self) -> None:
+        base = BaseModel()
+        sleep(0.05)
+        first_updated_at = base.updated_at
+        base.save()
+        second_updated_at = base.updated_at
+        self.assertLess(first_updated_at, second_updated_at)
+        sleep(0.05)
+        base.save()
+        self.assertLess(second_updated_at, base.updated_at)
+
+    def test_save_with_arg(self) -> None:
+        base = BaseModel()
+        with self.assertRaises(TypeError):
+            base.save(None)
+
+    def test_save_updates_file(self) -> None:
+        base = BaseModel()
+        base.save()
+        bmid = f"BaseModel.{base.id}"
+        with open("file.json", mode="r", encoding="utf-8") as file:
+            self.assertIn(bmid, file.read())
 if __name__ == "__main__":
     unittest.main()
