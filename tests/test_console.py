@@ -67,6 +67,22 @@ class TestHBNBCommandCreate(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("create MyModel"))
             self.assertEqual(correct, output.getvalue().strip())
+
+    def test_create_objects(self) -> None:
+        
+        classes = ["BaseModel", "User", "State", "City", 
+                   "Amenity", "Place", "Review"]
+
+        for cls in classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+                self.assertLess(0, len(output.getvalue().strip()))
+                test_key = f"{cls}.{output.getvalue().strip()}"
+                self.assertIn(test_key, storage.all().keys())
+
+
+                
+
         
 if __name__ == "__main__":
     unittest.main()
