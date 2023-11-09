@@ -341,14 +341,9 @@ class TestHBNBCommandAll(unittest.TestCase):
             self.assertNotIn("BaseModel", output.getvalue().strip())
 
     def test_all_single_object_dot_notation(self) -> None:
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("create BaseModel"))
-            self.assertFalse(HBNBCommand().onecmd("create User"))
-            self.assertFalse(HBNBCommand().onecmd("create State"))
-            self.assertFalse(HBNBCommand().onecmd("create Place"))
-            self.assertFalse(HBNBCommand().onecmd("create City"))
-            self.assertFalse(HBNBCommand().onecmd("create Amenity"))
-            self.assertFalse(HBNBCommand().onecmd("create Review"))
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("BaseModel.all()"))
             self.assertIn("BaseModel", output.getvalue().strip())
@@ -419,6 +414,13 @@ class TestHBNBCommandUpdate(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("MyModel.update()"))
             self.assertEqual(correct, output.getvalue().strip())
+
+    def test_update_missing_id_space_notation(self) -> None:
+        correct = "** instance id missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"update {cls}"))
+                self.assertEqual(correct, output.getvalue().strip())
 
 if __name__ == "__main__":
     unittest.main()
