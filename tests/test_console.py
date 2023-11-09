@@ -173,6 +173,9 @@ class TestHBNBCommandShow(unittest.TestCase):
 class TestHBNBCommandDestroy(unittest.TestCase):
     """Unittests for testing destroy in the HBNB command interpreter."""
 
+    classes = ["BaseModel", "User", "State", "City", 
+               "Amenity", "Place", "Review"]
+
     @classmethod
     def setUp(self) -> None:
         try:
@@ -207,6 +210,20 @@ class TestHBNBCommandDestroy(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("MyModel.destroy()"))
             self.assertEqual(correct, output.getvalue().strip())
+
+    def test_destroy_id_missing_space_notation(self) -> None:
+        correct = "** instance id missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"destroy {cls}"))
+                self.assertEqual(correct, output.getvalue().strip())
+        
+
+
+
+
+
+
 
 
 
