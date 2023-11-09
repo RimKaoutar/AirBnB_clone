@@ -144,5 +144,11 @@ class TestHBNBCommandShow(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.show()"))
                 self.assertEqual(correct, output.getvalue().strip())
 
+    def test_show_no_instance_found_space_notation(self) -> None:
+        correct = "** no instance found **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"show {cls} 1"))
+                self.assertEqual(correct, output.getvalue().strip())
 if __name__ == "__main__":
     unittest.main()
