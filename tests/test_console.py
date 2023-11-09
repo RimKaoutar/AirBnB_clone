@@ -266,6 +266,9 @@ class TestHBNBCommandDestroy(unittest.TestCase):
 class TestHBNBCommandAll(unittest.TestCase):
     """Unittests for testing all of the HBNB command interpreter."""
 
+    classes = ["BaseModel", "User", "State", "City", 
+               "Amenity", "Place", "Review"]
+
     @classmethod
     def setUp(self) -> None:
         try:
@@ -294,6 +297,13 @@ class TestHBNBCommandAll(unittest.TestCase):
             self.assertFalse(HBNBCommand().onecmd("all ALX"))
             self.assertEqual(correct, output.getvalue().strip())
 
+    def test_all_objects_space_notation(self) -> None:
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd("all"))
+                self.assertIn(f"{cls}", output.getvalue().strip())
 
         
 
