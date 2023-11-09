@@ -10,6 +10,7 @@ Unittest classes:
     TestHBNBCommandDestroy
     TestHBNBCommandAll
     TestHBNBCommandUpdate
+    TestHBNBCommandCount
 """
 import unittest
 import os
@@ -476,7 +477,38 @@ class TestHBNBCommandUpdate(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(test_cmd))
                 self.assertEqual(correct, output.getvalue().strip())
 
-        
+class TestHBNBCommandCount(unittest.TestCase):
+    """Unittests for testing count in HBNB comand interpreter."""
+
+    classes = ["BaseModel", "User", "State", "City", 
+               "Amenity", "Place", "Review"]
+
+    @classmethod
+    def setUp(self) -> None:
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage._FileStorage__objects = {}
+
+    @classmethod
+    def tearDown(self) -> None:
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("tmp", "file.json")
+        except IOError:
+            pass
+
+    def test_count_object(self) -> None:
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"{cls}.count()"))
+                self.assertEqual("1", output.getvalue().strip())
 
 
 
