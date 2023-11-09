@@ -6,6 +6,7 @@ Unittest classes:
     TestHBNBCommandQuit
     TestHBNBCommandEmptyLine
     TestHBNBCommandCreate
+    TestHBNBCommandPrompt
 """
 import unittest
 import os
@@ -80,6 +81,11 @@ class TestHBNBCommandCreate(unittest.TestCase):
                 test_key = f"{cls}.{output.getvalue().strip()}"
                 self.assertIn(test_key, storage.all().keys())
 
+class TestHBNBCommandPrompt(unittest.TestCase):
+    """Unittests for testing prompting the HBNB command interpreter."""
+
+    def test_prompt_string(self) -> None:
+        self.assertEqual("(hbnb) ", HBNBCommand.prompt)
 
                 
 
