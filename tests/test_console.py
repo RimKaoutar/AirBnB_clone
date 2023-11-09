@@ -443,7 +443,16 @@ class TestHBNBCommandUpdate(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.update(1)"))
                 self.assertEqual(correct, output.getvalue().strip())
 
-
+    def test_update_missing_attr_name_space_notation(self) -> None:
+        correct = "** attribute name missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
+                test_id = output.getvalue().strip()
+                test_cmd = "update {} {}".format(cls, test_id)
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(test_cmd))
+                self.assertEqual(correct, output.getvalue().strip())
 
 
 
