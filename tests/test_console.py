@@ -224,7 +224,12 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.destroy()"))
 
-
+    def test_destroy_invalid_id_space_notation(self) -> None:
+        correct = "** no instance found **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"destroy {cls} 1"))
+                self.assertEqual(correct, output.getvalue().strip())
 
 
 
