@@ -7,6 +7,7 @@ Unittest classes:
     TestHBNBCommandEmptyLine
     TestHBNBCommandCreate
     TestHBNBCommandPrompt
+    TestHBNBCommandDestroy
 """
 import unittest
 import os
@@ -168,7 +169,36 @@ class TestHBNBCommandShow(unittest.TestCase):
                 command = f"show {cls} {test_id}"
                 self.assertFalse(HBNBCommand().onecmd(command))
                 self.assertEqual(obj.__str__(), output.getvalue().strip())
-        
+
+class TestHBNBCommandDestroy(unittest.TestCase):
+    """Unittests for testing destroy in the HBNB command interpreter."""
+
+    @classmethod
+    def setUp(self) -> None:
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage.__objects = {}
+
+    @classmethod
+    def tearDown(self) -> None:
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("tmp", "file.json")
+        except IOError:
+            pass
+        storage.reload()
+
+    def test_destroy_missing_class(self) -> None:
+        correct = "** class name missing **"
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd("destroy"))
+            self.assertEqual(correct, output.getvalue().strip())
+
 
 if __name__ == "__main__":
     unittest.main()
