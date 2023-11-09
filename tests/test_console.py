@@ -137,7 +137,12 @@ class TestHBNBCommandShow(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(f"show {cls}"))
                 self.assertEqual(correct, output.getvalue().strip())
 
-    
+    def test_show_missing_id_dot_notation(self) -> None:
+        correct = "** instance id missing **"
+        for cls in self.classes:
+            with patch("sys.stdout", new=StringIO()) as output:
+                self.assertFalse(HBNBCommand().onecmd(f"{cls}.show()"))
+                self.assertEqual(correct, output.getvalue().strip())
 
 if __name__ == "__main__":
     unittest.main()
