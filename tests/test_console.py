@@ -8,6 +8,7 @@ Unittest classes:
     TestHBNBCommandCreate
     TestHBNBCommandPrompt
     TestHBNBCommandDestroy
+    TestHBNBCommandAll
 """
 import unittest
 import os
@@ -16,6 +17,7 @@ from unittest.mock import patch
 from console import HBNBCommand
 from models import storage
 from models.engine.file_storage import FileStorage
+
 
 class TestHBNBCommandQuit(unittest.TestCase):
     """Unittests for testing quiting the HBNB command interpreter."""
@@ -259,7 +261,38 @@ class TestHBNBCommandDestroy(unittest.TestCase):
                 command = "{}.destroy({})".format(cls,test_id)
                 self.assertFalse(HBNBCommand().onecmd(command))
                 self.assertNotIn(obj, storage.all())
-        
+    
+
+class TestHBNBCommandAll(unittest.TestCase):
+    """Unittests for testing all of the HBNB command interpreter."""
+
+    @classmethod
+    def setUp(self) -> None:
+        try:
+            os.rename("file.json", "tmp")
+        except IOError:
+            pass
+        FileStorage.__objects = {}
+
+    @classmethod
+    def tearDown(self) -> None:
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+        try:
+            os.rename("tmp", "file.json")
+        except IOError:
+            pass
+
+    def test_all_invalid_class(self) -> None:
+        correct = "** class doesn't exist **"
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd("all MyModel"))
+            self.assertEqual(correct, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as output:
+            self.assertFalse(HBNBCommand().onecmd("all ALX"))
+            self.assertEqual(correct, output.getvalue().strip())
 
 
         
