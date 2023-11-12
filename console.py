@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
-
 import cmd
 from models.base_model import BaseModel
 from models.user import User
@@ -13,6 +12,7 @@ from models import storage
 from re import search
 import json
 import re
+
 
 class HBNBCommand(cmd.Cmd):
     """class HBNBCommand(cmd.Cmd)"""
@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Empty line + enter should not execute anything"""
         pass
-    
+
     def do_create(self, args):
         """create an instance of a class type
         Args:
@@ -104,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
             all_instances = [value for key, value in storage.all().items()
                              if key.startswith(class_name)]
         print([str(all_instance) for all_instance in all_instances])
-    
+
     def do_update(self, args):
         """ Usage : update <class> <id> <attribute> <value>
             Usage : <class>.update(<id>, <attribute>, <value>)
@@ -129,8 +129,8 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 2:
             print("** attribute name missing **")
             return
-        if len(args) == 3:    
-            if type(args[2]) != dict :
+        if len(args) == 3:
+            if type(args[2]) is not dict:
                 print("** value missing **")
                 return
         if len(args) == 4:
@@ -140,7 +140,7 @@ class HBNBCommand(cmd.Cmd):
                 obj.__dict__[args[2]] = valtype(args[3])
             else:
                 obj.__dict__[args[2]] = args[3]
-        elif type(args[2]) == dict:
+        elif type(args[2]) is dict:
             obj = storage.all()["{}.{}".format(args[0], args[1])]
             for k, v in args[2].items():
                 if (k in obj.__class__.__dict__.keys() and
@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     obj.__dict__[k] = v
         storage.save()
-        
+
     def do_count(self, arg):
         """count the number of instances of an object
         Args:
@@ -164,9 +164,9 @@ class HBNBCommand(cmd.Cmd):
         print(count)
 
     def default(self, arg):
-        """Default behavior for cmd module when 
+        """Default behavior for cmd module when
         we enter <class_name>.<method> or invalid input"""
-        
+
         methods = {
             "all": self.do_all,
             "show": self.do_show,
@@ -186,19 +186,26 @@ class HBNBCommand(cmd.Cmd):
         print(f"*** Unknown syntax: {arg}")
         return False
 
+
 def parse_string(s):
+    """ parse a string into args, if special chars
+    found , return a dictionary element of a list
+    Args:
+        s (string): the string to parse
+    """
     dict_strings = re.findall(r'\{.*?\}', s)
     for i, dict_string in enumerate(dict_strings):
         s = s.replace(dict_string, f'{{placeholder{i}}}')
     elements = re.split(r'[ ,:\t\'\"]+', s)
     elements = [e.strip() for e in elements if e]
-    
+
     for i, element in enumerate(elements):
         if 'placeholder' in element:
             dict_index = int(element.strip('{}placeholder'))
             dict_string = dict_strings[dict_index].replace("'", '"')
             elements[i] = json.loads(dict_string)
     return elements
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
