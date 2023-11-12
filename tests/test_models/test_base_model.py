@@ -2,7 +2,7 @@
 """Defines unittests for models/base_model.py.
 Unittest classes:
     TestBaseModelInstantiate
-    
+
 """
 
 import contextlib
@@ -130,6 +130,7 @@ class TestBaseModelSave(unittest.TestCase):
         bmid = f"BaseModel.{base.id}"
         with open("file.json", mode="r", encoding="utf-8") as file:
             self.assertIn(bmid, file.read())
+
 
 class TestBaseModelToDict(unittest.TestCase):
     """Unittests for testing to_dict method of the BaseModel class."""

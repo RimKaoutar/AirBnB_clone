@@ -32,8 +32,10 @@ class TestHBNBCommandQuit(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertTrue(HBNBCommand().onecmd("EOF"))
 
+
 class TestHBNBCommandEmptyLine(unittest.TestCase):
     """Unittests for testing empty line in the HBNB command interpreter."""
+
     def test_emptyline_does_nothing(self) -> None:
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd(""))
@@ -75,8 +77,8 @@ class TestHBNBCommandCreate(unittest.TestCase):
             self.assertEqual(correct, output.getvalue().strip())
 
     def test_create_objects(self) -> None:
-        
-        classes = ["BaseModel", "User", "State", "City", 
+
+        classes = ["BaseModel", "User", "State", "City",
                    "Amenity", "Place", "Review"]
 
         for cls in classes:
@@ -86,16 +88,18 @@ class TestHBNBCommandCreate(unittest.TestCase):
                 test_key = f"{cls}.{output.getvalue().strip()}"
                 self.assertIn(test_key, storage.all().keys())
 
+
 class TestHBNBCommandPrompt(unittest.TestCase):
     """Unittests for testing prompting the HBNB command interpreter."""
 
     def test_prompt_string(self) -> None:
         self.assertEqual("(hbnb) ", HBNBCommand.prompt)
 
+
 class TestHBNBCommandShow(unittest.TestCase):
     """Unittests for testing show in the HBNB command interpreter"""
 
-    classes = ["BaseModel", "User", "State", "City", 
+    classes = ["BaseModel", "User", "State", "City",
                "Amenity", "Place", "Review"]
 
     @classmethod
@@ -174,10 +178,11 @@ class TestHBNBCommandShow(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(command))
                 self.assertEqual(obj.__str__(), output.getvalue().strip())
 
+
 class TestHBNBCommandDestroy(unittest.TestCase):
     """Unittests for testing destroy in the HBNB command interpreter."""
 
-    classes = ["BaseModel", "User", "State", "City", 
+    classes = ["BaseModel", "User", "State", "City",
                "Amenity", "Place", "Review"]
 
     @classmethod
@@ -259,16 +264,16 @@ class TestHBNBCommandDestroy(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(f"create {cls}"))
                 test_id = output.getvalue().strip()
             with patch("sys.stdout", new=StringIO()) as output:
-                obj = storage.all()["{}.{}".format(cls,test_id)]
-                command = "{}.destroy({})".format(cls,test_id)
+                obj = storage.all()["{}.{}".format(cls, test_id)]
+                command = "{}.destroy({})".format(cls, test_id)
                 self.assertFalse(HBNBCommand().onecmd(command))
                 self.assertNotIn(obj, storage.all())
-    
+
 
 class TestHBNBCommandAll(unittest.TestCase):
     """Unittests for testing all of the HBNB command interpreter."""
 
-    classes = ["BaseModel", "User", "State", "City", 
+    classes = ["BaseModel", "User", "State", "City",
                "Amenity", "Place", "Review"]
 
     @classmethod
@@ -306,7 +311,6 @@ class TestHBNBCommandAll(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd("all"))
                 self.assertIn(f"{cls}", output.getvalue().strip())
-    
 
     def test_all_single_object_space_notation(self) -> None:
         for cls in self.classes:
@@ -374,11 +378,13 @@ class TestHBNBCommandAll(unittest.TestCase):
             self.assertIn("Review", output.getvalue().strip())
             self.assertNotIn("BaseModel", output.getvalue().strip())
 
+
 class TestHBNBCommandUpdate(unittest.TestCase):
     """Unittests for testing update from the HBNB command interpreter."""
 
-    classes = ["BaseModel", "User", "State", "City", 
+    classes = ["BaseModel", "User", "State", "City",
                "Amenity", "Place", "Review"]
+
     @classmethod
     def setUp(self) -> None:
         try:
@@ -477,10 +483,11 @@ class TestHBNBCommandUpdate(unittest.TestCase):
                 self.assertFalse(HBNBCommand().onecmd(test_cmd))
                 self.assertEqual(correct, output.getvalue().strip())
 
+
 class TestHBNBCommandCount(unittest.TestCase):
     """Unittests for testing count in HBNB comand interpreter."""
 
-    classes = ["BaseModel", "User", "State", "City", 
+    classes = ["BaseModel", "User", "State", "City",
                "Amenity", "Place", "Review"]
 
     @classmethod
@@ -509,32 +516,6 @@ class TestHBNBCommandCount(unittest.TestCase):
             with patch("sys.stdout", new=StringIO()) as output:
                 self.assertFalse(HBNBCommand().onecmd(f"{cls}.count()"))
                 self.assertEqual("1", output.getvalue().strip())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

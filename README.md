@@ -92,6 +92,6 @@ $ python3 unittest -m tests/test_console.py
 
 
 ## Authors:
-Rim Kaoutar <rim.kaoutar.pro@gmail.com>
+Rim Kaoutar <rim.kaoutar.pro@gmail.com><br>
 Darghal Mohammed <mrdrgh2003@gmail.com>
 
